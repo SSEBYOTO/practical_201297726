@@ -5,9 +5,8 @@ Created on Wed May  5 01:27:26 2021
 @author: gaming
 """
 
+import tkinter 
 import random
-import operator
-import tkinter
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot
@@ -17,6 +16,13 @@ import csv
 import requests
 import bs4
 
+#run the animation
+def run():
+    global animation
+    animation = matplotlib.animation.FuncAnimation(fig, update, frames=gen_function, repeat=False)
+    canvas.show()
+    
+#request data from an online source
 r = requests.get('http://www.geog.leeds.ac.uk/courses/computing/practicals/python/agent-framework/part9/data.html')
 content = r.text
 soup = bs4.BeautifulSoup(content, 'html.parser')
@@ -24,10 +30,8 @@ td_ys = soup.find_all(attrs={"class" : "y"})
 td_xs = soup.find_all(attrs={"class" : "x"})
 print(td_ys)
 print(td_xs)
+ 
 
-def run():
-    animation = matplotlib.animation.FuncAnimation(fig, update, frames=gen_function, repeat=False)
-    canvas.show()
     
 num_of_agents = 100
 num_of_iterations = 10
@@ -39,13 +43,14 @@ random.seed(seed)
 num_of_agents = 10
 num_of_iterations = 100
 
-f = open('in.txt', newline='')
+f = open('in.txt', newline='')  #open the text file
 reader = csv.reader(f, quoting=csv.QUOTE_NONNUMERIC)
 
 #Lines here happen before any data is processed
 environment =[]
 agents =[]
 
+#define figure size
 fig = matplotlib.pyplot.figure(figsize=(7, 7))
 ax = fig.add_axes([0, 0, 1, 1])
 
@@ -120,7 +125,7 @@ def update(frame_number):
     
     for i in range (num_of_agents):
         matplotlib.pyplot.scatter(agents[i].x, agents[i].y)
-    matplotlib.pyplot.show()
+        matplotlib.pyplot.show()
 
 def gen_function(b = [0]):
     a = 0
@@ -134,7 +139,7 @@ for agents_row_a in agents:
         distance = distance_between(agents_row_a, agents_row_b) 
         
 
-
+#define and create menu 
 root = tkinter.Tk()
 root.wm_title("Model")
 canvas = matplotlib.backends.backend_tkagg.FigureCanvasTkAgg(fig, master=root)
@@ -146,3 +151,8 @@ menu_bar.add_cascade(label="Model", menu=model_menu)
 model_menu.add_command(label="Run model", command=run)
 
 tkinter.mainloop()
+
+
+
+
+
